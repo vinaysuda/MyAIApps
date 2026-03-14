@@ -1,0 +1,88 @@
+﻿//YouTube video that cover this sample: https://youtu.be/OeAqD7lCSGg
+
+using Azure;
+using Azure.AI.Agents.Persistent;
+using Azure.Identity;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using Shared;
+
+Console.Clear();
+
+Secrets secrets = SecretsManager.GetSecrets();
+PersistentAgentsClient client = new(secrets.AzureAiFoundryAgentEndpoint, new AzureCliCredential());
+
+Response<PersistentAgent>? aiFoundryAgent = null;
+ChatClientAgentSession? chatClientAgentSession = null;
+string? vectorStoreId = null;
+try
+{
+    string filename = "secretData.pdf";
+    Response<PersistentAgentFileInfo> file = await client.Files.UploadFileAsync(Path.Combine("Data", filename), PersistentAgentFilePurpose.Agents);
+
+    Response<PersistentAgentsVectorStore> vectorStore = await client.VectorStores.CreateVectorStoreAsync(name: "MyVectorStore");
+    vectorStoreId = vectorStore.Value.Id;
+    await client.VectorStores.CreateVectorStoreFileAsync(vectorStore.Value.Id, file.Value.Id);
+
+    aiFoundryAgent = await client.Administration.CreateAgentAsync(
+        "gpt-4.1",
+        "FileAgent",
+        "",
+        "You are a File-expert. ALWAYS use tools to answer all questions (do not use you world-knowledge)",
+        toolResources: new ToolResources
+        {
+            FileSearch = new FileSearchToolResource
+            {
+                VectorStoreIds = { vectorStore.Value.Id },
+            }
+        },
+        tools: new List<ToolDefinition>
+        {
+            new FileSearchToolDefinition
+            {
+                FileSearch = new FileSearchToolDefinitionDetails
+                {
+                    MaxNumResults = 10
+                }
+            }
+        });
+
+    AIAgent agent = (await client.GetAIAgentAsync(aiFoundryAgent.Value.Id));
+
+    AgentSession session = await agent.CreateSessionAsync();
+
+    AgentResponse response = await agent.RunAsync("What is word of the day?", session);
+    Console.WriteLine(response);
+    foreach (ChatMessage message in response.Messages)
+    {
+        foreach (AIContent content in message.Contents)
+        {
+            foreach (AIAnnotation annotation in content.Annotations ?? [])
+            {
+                if (annotation is CitationAnnotation citationAnnotation)
+                {
+                    string? fileId = citationAnnotation.FileId;
+                    Response<PersistentAgentFileInfo> fileReferenced = await client.Files.GetFileAsync(fileId);
+                    Utils.Yellow("File referenced: " + fileReferenced.Value.Filename);
+                }
+            }
+        }
+    }
+}
+finally
+{
+    if (vectorStoreId != null)
+    {
+        await client.VectorStores.DeleteVectorStoreAsync(vectorStoreId);
+    }
+
+    if (chatClientAgentSession != null)
+    {
+        await client.Threads.DeleteThreadAsync(chatClientAgentSession.ConversationId);
+    }
+
+    if (aiFoundryAgent != null)
+    {
+        await client.Administration.DeleteAgentAsync(aiFoundryAgent.Value.Id);
+    }
+}
