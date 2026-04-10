@@ -45,7 +45,7 @@ public class FileTool
 
             //NB: I was unable to get this to work with Azure OpenAI in regard to downloading files from Code Interpreter
             AIAgent agent = client
-                .GetResponsesClient("gpt-4.1")
+                .GetResponsesClient()
                 .AsAIAgent(
                     instructions: "Only use tools. Never your world-knowledge",
                     tools:

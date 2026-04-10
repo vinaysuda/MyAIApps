@@ -86,7 +86,7 @@ async Task RawResponsesApi()
 {
     AzureOpenAIClient azureOpenAiClient = new(new Uri(endpoint), new ApiKeyCredential(apiKey));
     ChatClientAgent agent = azureOpenAiClient
-        .GetResponsesClient("gpt-5-mini")
+        .GetResponsesClient()
         .AsAIAgent(
             options: new ChatClientAgentOptions
             {

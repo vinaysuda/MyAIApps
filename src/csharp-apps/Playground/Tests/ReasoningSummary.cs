@@ -21,7 +21,7 @@ public class ReasoningSummary
         AzureOpenAIClient client = new(new Uri(secrets.AzureOpenAiEndpoint), new ApiKeyCredential(secrets.AzureOpenAiKey));
 
         ChatClientAgent agent = client
-            .GetResponsesClient("gpt-5-mini")
+            .GetResponsesClient()
             .AsAIAgent(new ChatClientAgentOptions
             {
                 ChatOptions = new ChatOptions

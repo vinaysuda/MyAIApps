@@ -15,7 +15,7 @@ Console.Clear();
 AzureOpenAIClient client = new(new Uri(secrets.AzureOpenAiEndpoint), new ApiKeyCredential(secrets.AzureOpenAiKey));
 
 AIAgent agent = client
-    .GetResponsesClient("gpt-5-codex")
+    .GetResponsesClient()
     .AsAIAgent(
         instructions: "You are a C# Developer"
     );

@@ -15,7 +15,7 @@ Secrets secrets = SecretsManager.GetSecrets();
 OpenAIClient client = new(secrets.OpenAiApiKey);
 /*AzureOpenAIClient client = new(new Uri(secrets.AzureOpenAiEndpoint), new ApiKeyCredential(secrets.AzureOpenAiKey));*/
 ResponsesClient responseClient = client
-    .GetResponsesClient("gpt-4.1");
+    .GetResponsesClient();
 
 AIAgent agent = responseClient
     .AsAIAgent(

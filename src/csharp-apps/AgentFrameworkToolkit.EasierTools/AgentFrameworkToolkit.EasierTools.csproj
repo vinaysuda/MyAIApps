@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AgentFrameworkToolkit.AzureOpenAI" />
-    <PackageReference Include="AgentFrameworkToolkit.Tools.ModelContextProtocol" />
+    <PackageReference Include="AgentFrameworkToolkit.AzureOpenAI" Version="1.0.0-rc4" />
+    <PackageReference Include="AgentFrameworkToolkit.Tools.ModelContextProtocol" Version="1.0.0-rc4" />
   </ItemGroup>
 
   <ItemGroup>

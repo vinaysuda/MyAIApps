@@ -8,9 +8,9 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.AI.OpenAI" />
-		<PackageReference Include="Microsoft.Agents.AI.OpenAI" />
-		<PackageReference Include="Microsoft.Agents.AI.Hosting.A2A.AspNetCore" />
+		<PackageReference Include="Azure.AI.OpenAI" Version="2.9.0-beta.1" />
+		<PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc4" />
+		<PackageReference Include="Microsoft.Agents.AI.Hosting.A2A.AspNetCore" Version="1.0.0-preview.260311.1" />
 	</ItemGroup>
 
 	<ItemGroup>
