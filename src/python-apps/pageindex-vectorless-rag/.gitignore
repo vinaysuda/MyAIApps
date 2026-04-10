@@ -1,0 +1,26 @@
+# Environment variables — never commit API keys
+.env
+
+# YouTube scripts
+youtube_script.md
+
+# PDF files (large binary files)
+*.pdf
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
